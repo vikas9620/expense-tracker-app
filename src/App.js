@@ -1,12 +1,23 @@
 
 import './App.css';
-import SignUp from './component/authentication/SignUp';
+import Auth from './component/authentication/Auth';
+import {Route, Routes, Outlet, Navigate} from 'react-router';
+import MainPage from './component/welcome-page/MainPage'; 
+import React from 'react';
 
 function App() {
+
   return (
-    <div className="App">
-     <SignUp></SignUp>
-    </div>
+  <React.Fragment>
+    <Outlet />
+    <Routes>
+<Route path="/" element={<MainPage />} exact/>
+    <Route path="/auth" element={<Auth />} />
+    
+ 
+    <Route path='*' element={<Navigate replace to="/" />}  />
+    </Routes>
+    </React.Fragment>
   );
 }
 

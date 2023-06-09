@@ -9,7 +9,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Button, Paper } from "@mui/material";
 import { ExpenseContext } from "../../cart-context/CartContex";
-
+import { Link } from "react-router-dom";
 const theme = createTheme({
   palette: {
     primary: {
@@ -21,30 +21,26 @@ const theme = createTheme({
   },
 });
 
-const SignUp = (props) => {
+const Login = (props) => {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const confirmPasswordRef = useRef();
- const {signUp} = useContext(ExpenseContext)
+
+ const {login} = useContext(ExpenseContext)
 
   const handleSubmit = (event) => {
     event.preventDefault();
    
-    if (passwordRef.current.value === confirmPasswordRef.current.value) {
+
         const data = {
           email: emailRef.current.value,
           password: passwordRef.current.value,
-          confirmPassword: confirmPasswordRef.current.value
         };
-        signUp(data);
+        login(data);
         console.log(data);
         emailRef.current.value = "";
         passwordRef.current.value = "";
-        confirmPasswordRef.current.value = "";
-      } else {
-        console.log()
-        console.log("Password and Confirm Password do not match.");
-      }
+       
+      
     };
   return (
     <ThemeProvider theme={theme}>
@@ -61,7 +57,7 @@ const SignUp = (props) => {
           <Paper elevation={2} sx={{ p: 4 }}>
             <Avatar sx={{ m: 1, bgcolor: "primary.main", margin: "0 auto" }}></Avatar>
             <Typography component="h1" variant="h5">
-              Sign up
+              Login
             </Typography>
             <Box
               component="div"
@@ -93,30 +89,25 @@ const SignUp = (props) => {
                     inputRef={passwordRef}
                   />
                 </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="confirmPassword"
-                    label="Confirm Password"
-                    type="password"
-                    id="confirmPassword"
-                    autoComplete="new-password"
-                    inputRef={confirmPasswordRef}
-                  />
-                </Grid>
+            
               </Grid>
               <Grid marginTop="1rem">
               <Button variant="contained"  color="primary" fullWidth onClick={handleSubmit} >
-                Sign Up
+                login
               </Button>
               </Grid>
+              <Grid item xs >
+              <Link href="#" variant="body2" >
+                Forgot password?
+              </Link>
+            </Grid>
             </Box>
           </Paper>
 
           <Grid container justifyContent="center" mt={2}>
+         
             <Button variant="contained" color="primary" onClick={props.onChange}>
-              Already have an account? Sign in
+              Don't have an account? Login
             </Button>
           </Grid>
         </Box>
@@ -125,4 +116,4 @@ const SignUp = (props) => {
   );
 };
 
-export default SignUp;
+export default Login;
