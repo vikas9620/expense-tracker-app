@@ -97,7 +97,7 @@ const Login = (props) => {
               </Button>
               </Grid>
               <Grid item xs >
-              <Link href="#" variant="body2" >
+              <Link to='/passwordreset' variant="body2" >
                 Forgot password?
               </Link>
             </Grid>

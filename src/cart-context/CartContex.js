@@ -34,7 +34,7 @@ const signUpHandler = async (data)=>{
         );
         if (res.ok) {
           console.log('User has successfully signed up.');
-      
+      navigate('/login')
         } else {
           console.log('Failed to sign up.');
         }

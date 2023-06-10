@@ -51,7 +51,7 @@ const {logout} = useContext(ExpenseContext)
         </Toolbar>
       </AppBar>
     </Box>
-    <Paper style={{marginTop: '10rem'}} ><VerifyEmailButton /> </Paper>
+    <VerifyEmailButton /> 
     </React.Fragment>
   );
 }
