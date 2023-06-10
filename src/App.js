@@ -4,7 +4,7 @@ import Auth from './component/authentication/Auth';
 import {Route, Routes, Outlet, Navigate} from 'react-router';
 import MainPage from './component/welcome-page/MainPage'; 
 import React from 'react';
-
+import Profile from './component/profile/Profile';
 function App() {
 
   return (
@@ -13,7 +13,7 @@ function App() {
     <Routes>
 <Route path="/" element={<MainPage />} exact/>
     <Route path="/auth" element={<Auth />} />
-    
+    <Route path="/profile" element={<Profile />} />
  
     <Route path='*' element={<Navigate replace to="/" />}  />
     </Routes>
