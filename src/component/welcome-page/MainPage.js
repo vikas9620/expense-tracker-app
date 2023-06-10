@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import React, { useContext } from "react";
 import { ExpenseContext } from "../../cart-context/CartContex";
 import { Link } from "react-router-dom";
@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import VerifyEmailButton from "./EmailVerification";
 
 
 
@@ -19,7 +20,7 @@ const {logout} = useContext(ExpenseContext)
  
 
 
-  return (
+  return (<React.Fragment>
     <Box sx={{ flexGrow: 0.5 }}>
       <AppBar position="static">
         <Toolbar>
@@ -30,12 +31,10 @@ const {logout} = useContext(ExpenseContext)
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-  
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
          <h3> welcome to expense tracker!!!</h3>
-          </Typography>
-      (
+          </Typography>      
             <div>
               <IconButton
                 size="large"
@@ -48,11 +47,12 @@ const {logout} = useContext(ExpenseContext)
                 <AccountCircle /><h5>your profile is incomplete</h5><Link to='/profile'>Complete Now</Link>
               </IconButton>
               <Button color="error" variant="contained" onClick={()=>{logout()}}>Logout</Button>
-            </div>
-          )
+            </div>         
         </Toolbar>
       </AppBar>
     </Box>
+    <Paper style={{marginTop: '10rem'}} ><VerifyEmailButton /> </Paper>
+    </React.Fragment>
   );
 }
 export default MainPage
