@@ -1,68 +1,10 @@
 import { Button } from "@mui/material";
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useContext } from "react";
+import { ExpenseContext } from "../../cart-context/CartContex";
+
 
 const VerifyEmailButton = () => {
-  const [isEmailSent, setIsEmailSent] = useState(false);
-  const [error, setError] = useState(null);
-const navigate =useNavigate();
-  const handleSendVerificationEmail = async () => {
-    try {
-      const idToken = localStorage.getItem("token");
-      const response = await fetch(
-        `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyBphrrbbsyooJ1nCbT9FWa8yGRWWExaVco`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            requestType: "VERIFY_EMAIL",
-            idToken: idToken,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        setIsEmailSent(true);
-        const emailVerified = await checkEmailVerification(idToken);
-        if (emailVerified) {
-          navigate("/profile");}
-      } else {
-        const responseData = await response.json();
-        setError(responseData.error.message);
-      }
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-  const checkEmailVerification = async (idToken) => {
-    try {
-      const response = await fetch(
-        `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBphrrbbsyooJ1nCbT9FWa8yGRWWExaVco`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            idToken: idToken,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        const responseData = await response.json();
-        const emailVerified = responseData.users[0].emailVerified;
-        return emailVerified;
-      } else {
-        throw new Error("Unable to check email verification status");
-      }
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  };
+const {handleSendVerificationEmail,error,isEmailSent} = useContext(ExpenseContext)
 
   return (
     <div style={{width: '40%', margin: '0 auto', padding: '3rem'}}>

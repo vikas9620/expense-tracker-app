@@ -47,7 +47,7 @@ const navigate = useNavigate()
   };
 
   return (
-    <Card style={{margin: '20rem', background: 'rgb(2,0,36)',
+    <Card style={{margin: '20rem',
     background: 'linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(196,245,239,1) 0%, rgba(0,168,255,1) 96%)'}}>
       <CardContent style={{margin: '0 auto', width: '50%', display: 'flex', flexDirection: 'column'}}>
         <Typography variant="h5" component="div" style={{marginBottom: '1rem'}}>

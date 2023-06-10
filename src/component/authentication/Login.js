@@ -96,7 +96,7 @@ const Login = (props) => {
                 login
               </Button>
               </Grid>
-              <Grid item xs >
+              <Grid item xs style={{marginTop: '0.75rem'}}>
               <Link to='/passwordreset' variant="body2" >
                 Forgot password?
               </Link>

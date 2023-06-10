@@ -1,4 +1,4 @@
-import { Button, Paper } from "@mui/material";
+import { Button } from "@mui/material";
 import React, { useContext } from "react";
 import { ExpenseContext } from "../../cart-context/CartContex";
 import { Link } from "react-router-dom";
@@ -11,11 +11,12 @@ import IconButton from '@mui/material/IconButton';
 
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import VerifyEmailButton from "./EmailVerification";
+import ExpenseForm from "../expenseForm/ExpenseForm";
 
 
 
 const MainPage = ()=>{
-const {logout} = useContext(ExpenseContext)
+const {logout, isEmailSent } = useContext(ExpenseContext)
 
  
 
@@ -51,7 +52,8 @@ const {logout} = useContext(ExpenseContext)
         </Toolbar>
       </AppBar>
     </Box>
-    <VerifyEmailButton /> 
+   {isEmailSent && <VerifyEmailButton /> }
+   <ExpenseForm/>
     </React.Fragment>
   );
 }
