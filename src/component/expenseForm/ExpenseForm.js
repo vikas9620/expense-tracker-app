@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Container,
   Typography,
@@ -17,7 +17,7 @@ function ExpenseForm() {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
  
-const {addExpense,expense } = useContext(ExpenseContext)
+const {addExpense,expense, fetchExpenses } = useContext(ExpenseContext)
   const handleAddExpense = (event) => {
     event.preventDefault();
 
@@ -36,7 +36,7 @@ addExpense(newExpense);
     setDescription("");
     setCategory("");
   };
-
+useEffect(() => {fetchExpenses()},[]);
   return (
     <Container maxWidth="sm">
       <div style={{ marginTop: "2rem" }}>
