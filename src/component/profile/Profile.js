@@ -14,7 +14,34 @@ const Profile = () => {
   const [username, setUsername] = useState("");
   const [profileImageURL, setProfileImageURL] = useState("");
 
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const res = await fetch(
+          `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBphrrbbsyooJ1nCbT9FWa8yGRWWExaVco`,
+          {
+            method: "POST",
+            body: JSON.stringify({ idToken: token }),
+            headers: { "Content-Type": "application/json" },
+          }
+        );
 
+        if (res.ok) {
+          const responseData = await res.json();
+          const userProfileData = responseData.users[0];
+
+          setUsername(userProfileData.displayName || "");
+          setProfileImageURL(userProfileData.photoUrl || "");
+        } else {
+          console.log("Failed to fetch user profile.");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUserProfile();
+  }, [token]);
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
       };
