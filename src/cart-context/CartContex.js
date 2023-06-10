@@ -10,6 +10,9 @@ export const ExpenseContext = React.createContext({
   isEmailSent: "false",
   error: null,
   emailVerified: () => {},
+  addExpense: () => {},
+  fetchExpenses: () => {},
+  expense: null,
 });
 
 export const ExpenseProvider = (props) => {
@@ -19,7 +22,8 @@ export const ExpenseProvider = (props) => {
   const userIsLoggedIn = !!token;
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [error, setError] = useState(null);
-
+  const [expense, setExpense] = useState(null);
+  const [userEmail, setUserEmail] = useState(null);
   const handleSendVerificationEmail = async () => {
     try {
       const idToken = localStorage.getItem("token");
@@ -81,6 +85,7 @@ export const ExpenseProvider = (props) => {
   const logoutHandler = () => {
     setToken(null);
     localStorage.removeItem("token");
+    setUserEmail(null);
     navigate("/auth");
   };
   const signUpHandler = async (data) => {
@@ -116,8 +121,10 @@ export const ExpenseProvider = (props) => {
       if (res.ok) {
         const responseData = await res.json();
         console.log("User has successfully logged in.");
-        console.log("User ID:", responseData.localId);
-        console.log("Token:", responseData.idToken);
+   
+        setUserEmail(responseData.email.replace(/[@.]/g, ""));
+        console.log("User ID:", );
+        
 
         setToken(responseData.idToken); // Update the token value
         localStorage.setItem("token", responseData.idToken);
@@ -156,6 +163,65 @@ export const ExpenseProvider = (props) => {
       console.error(error);
     }
   };
+
+  const addExpenseHandler = async (expense) => {
+    try {
+      const res = await fetch(
+        `https://expense-tracker-app-146b8-default-rtdb.firebaseio.com/expense/${userEmail}.json`,
+        {
+          method: "POST",
+          body: JSON.stringify({ amount: expense.expAmount,
+          description: expense.expDescription,
+        cattegory: expense.expCategory }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      );
+      if (res.ok) {
+        const responseData = await res.json();
+        console.log("User has successfully added expense.");
+        console.log("User ID:", responseData);
+        fetchExpenseDataHandler();
+      } else {
+        console.log("Failed to add expense.");
+      }
+    } catch (error) {
+      console.log("Failed to connect.");
+    }
+  };
+  const fetchExpenseDataHandler = async () => {
+    try {
+      const response = await fetch(
+        `https://expense-tracker-app-146b8-default-rtdb.firebaseio.com/expense/${userEmail}.json`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data)
+        if (data) {
+          const expenseItems = Object.values(data);
+          setExpense(expenseItems);
+          console.log(expenseItems);
+        } else {
+          setExpense([]);
+          console.log("expenseItems");
+        }
+        // Process the expenseData retrieved from the database
+    
+      } else {
+        console.log("Failed to fetch expense data.");
+      }
+    } catch (error) {
+      console.log("Failed to connect to the database.");
+    }
+  };
+
   return (
     <ExpenseContext.Provider
       value={{
@@ -168,6 +234,9 @@ export const ExpenseProvider = (props) => {
         emailVerified: handleSendVerificationEmail,
         isEmailSent: isEmailSent,
         error: error,
+        addExpense: addExpenseHandler,
+        fetchExpenses: fetchExpenseDataHandler,
+        expense: expense,
       }}
     >
       {props.children}

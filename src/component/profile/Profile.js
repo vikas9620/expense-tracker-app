@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import { AccountCircle, Image } from "@mui/icons-material";
 
 const Profile = () => {
-  const { logout,profileUpdate,token } = useContext(ExpenseContext);
+  const { logout, profileUpdate, token } = useContext(ExpenseContext);
   const [username, setUsername] = useState("");
   const [profileImageURL, setProfileImageURL] = useState("");
 
@@ -42,26 +42,26 @@ const Profile = () => {
 
     fetchUserProfile();
   }, [token]);
-    const handleUsernameChange = (e) => {
-        setUsername(e.target.value);
-      };
-    
-      const handleProfileImageURLChange = (e) => {
-        setProfileImageURL(e.target.value);
-      };
-    
-      const handleUpdate = (e) => {
-        e.preventDefault();
-    
-        const userdata = {
-          name: username,
-          profileImage: profileImageURL,
-        };
-   
-profileUpdate(userdata,token);
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const handleProfileImageURLChange = (e) => {
+    setProfileImageURL(e.target.value);
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+
+    const userdata = {
+      name: username,
+      profileImage: profileImageURL,
+    };
+
+    profileUpdate(userdata, token);
     console.log("Username:", username);
     console.log("Profile Image URL:", profileImageURL);
-    console.log(token)
+    console.log(token);
     setUsername("");
     setProfileImageURL("");
   };

@@ -25,27 +25,27 @@ const SignUp = (props) => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
- const {signUp} = useContext(ExpenseContext)
+  const { signUp } = useContext(ExpenseContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-   
+
     if (passwordRef.current.value === confirmPasswordRef.current.value) {
-        const data = {
-          email: emailRef.current.value,
-          password: passwordRef.current.value,
-          confirmPassword: confirmPasswordRef.current.value
-        };
-        signUp(data);
-        console.log(data);
-        emailRef.current.value = "";
-        passwordRef.current.value = "";
-        confirmPasswordRef.current.value = "";
-      } else {
-        console.log()
-        console.log("Password and Confirm Password do not match.");
-      }
-    };
+      const data = {
+        email: emailRef.current.value,
+        password: passwordRef.current.value,
+        confirmPassword: confirmPasswordRef.current.value,
+      };
+      signUp(data);
+      console.log(data);
+      emailRef.current.value = "";
+      passwordRef.current.value = "";
+      confirmPasswordRef.current.value = "";
+    } else {
+      console.log();
+      console.log("Password and Confirm Password do not match.");
+    }
+  };
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -59,16 +59,13 @@ const SignUp = (props) => {
           }}
         >
           <Paper elevation={2} sx={{ p: 4 }}>
-            <Avatar sx={{ m: 1, bgcolor: "primary.main", margin: "0 auto" }}></Avatar>
+            <Avatar
+              sx={{ m: 1, bgcolor: "primary.main", margin: "0 auto" }}
+            ></Avatar>
             <Typography component="h1" variant="h5">
               Sign up
             </Typography>
-            <Box
-              component="div"
-              noValidate
-              
-              sx={{ mt: 3 }}
-            >
+            <Box component="div" noValidate sx={{ mt: 3 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
@@ -107,15 +104,24 @@ const SignUp = (props) => {
                 </Grid>
               </Grid>
               <Grid marginTop="1rem">
-              <Button variant="contained"  color="primary" fullWidth onClick={handleSubmit} >
-                Sign Up
-              </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  onClick={handleSubmit}
+                >
+                  Sign Up
+                </Button>
               </Grid>
             </Box>
           </Paper>
 
           <Grid container justifyContent="center" mt={2}>
-            <Button variant="contained" color="primary" onClick={props.onChange}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={props.onChange}
+            >
               Already have an account? Sign in
             </Button>
           </Grid>

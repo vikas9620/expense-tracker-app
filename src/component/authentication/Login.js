@@ -25,23 +25,20 @@ const Login = (props) => {
   const emailRef = useRef();
   const passwordRef = useRef();
 
- const {login} = useContext(ExpenseContext)
+  const { login } = useContext(ExpenseContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-   
 
-        const data = {
-          email: emailRef.current.value,
-          password: passwordRef.current.value,
-        };
-        login(data);
-        console.log(data);
-        emailRef.current.value = "";
-        passwordRef.current.value = "";
-       
-      
+    const data = {
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
     };
+    login(data);
+    console.log(data);
+    emailRef.current.value = "";
+    passwordRef.current.value = "";
+  };
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -55,16 +52,13 @@ const Login = (props) => {
           }}
         >
           <Paper elevation={2} sx={{ p: 4 }}>
-            <Avatar sx={{ m: 1, bgcolor: "primary.main", margin: "0 auto" }}></Avatar>
+            <Avatar
+              sx={{ m: 1, bgcolor: "primary.main", margin: "0 auto" }}
+            ></Avatar>
             <Typography component="h1" variant="h5">
               Login
             </Typography>
-            <Box
-              component="div"
-              noValidate
-              
-              sx={{ mt: 3 }}
-            >
+            <Box component="div" noValidate sx={{ mt: 3 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
@@ -89,24 +83,31 @@ const Login = (props) => {
                     inputRef={passwordRef}
                   />
                 </Grid>
-            
               </Grid>
               <Grid marginTop="1rem">
-              <Button variant="contained"  color="primary" fullWidth onClick={handleSubmit} >
-                login
-              </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  onClick={handleSubmit}
+                >
+                  login
+                </Button>
               </Grid>
-              <Grid item xs style={{marginTop: '0.75rem'}}>
-              <Link to='/passwordreset' variant="body2" >
-                Forgot password?
-              </Link>
-            </Grid>
+              <Grid item xs style={{ marginTop: "0.75rem" }}>
+                <Link to="/passwordreset" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
             </Box>
           </Paper>
 
           <Grid container justifyContent="center" mt={2}>
-         
-            <Button variant="contained" color="primary" onClick={props.onChange}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={props.onChange}
+            >
               Don't have an account? Login
             </Button>
           </Grid>
