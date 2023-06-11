@@ -88,7 +88,7 @@ export const ExpenseProvider = (props) => {
     setToken(null);
     localStorage.removeItem("token");
     setUserEmail(null);
-    navigate("/auth/login");
+    navigate("/auth");
   };
   const signUpHandler = async (data) => {
     try {
@@ -130,6 +130,7 @@ export const ExpenseProvider = (props) => {
         setToken(responseData.idToken); // Update the token value
         localStorage.setItem("token", responseData.idToken);
         navigate("/");
+        fetchExpenseDataHandler()
       } else {
         console.log("Failed to log in.");
       }

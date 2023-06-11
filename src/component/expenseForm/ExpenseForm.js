@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import {
   Container,
   Typography,
@@ -18,8 +18,8 @@ function ExpenseForm() {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-
-  const { addExpense, expense, fetchExpenses, deleteExpense } =
+  const [rendered, setRendered] = useState(false);
+  const { addExpense, expense, deleteExpense, fetchExpenses } =
     useContext(ExpenseContext);
   const handleAddExpense = (event) => {
     event.preventDefault();
@@ -42,11 +42,15 @@ function ExpenseForm() {
     setCategory(selectedExpense.category);
     deleteExpense(selectedExpense.id);
   };
-
+  const handleInitialRender = () => {
+    if (!rendered) {
+fetchExpenses()
+      setRendered(true);
+    }
+  };
+  handleInitialRender();
   console.log(expense);
-  useEffect(() => {
-    fetchExpenses();
-  }, []);
+  
   return (
     <Container maxWidth="sm">
       <div style={{ marginTop: "2rem" }}>
@@ -99,7 +103,7 @@ function ExpenseForm() {
           </Typography>
           <Paper style={{ marginBottom: "1rem", padding: "1rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Chip label="Amount" color="primary" />
+              <Chip label="Amount" color="primary"  />
 
               <Chip label="Description" color="primary" />
               <Chip label="Expense category" color="primary" />
@@ -141,6 +145,7 @@ function ExpenseForm() {
                   label={expense.category}
                   color="primary"
                   variant="outlined"
+                  
                 />
 
                 <Button
