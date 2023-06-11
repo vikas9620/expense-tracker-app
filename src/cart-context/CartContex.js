@@ -13,6 +13,8 @@ export const ExpenseContext = React.createContext({
   addExpense: () => {},
   fetchExpenses: () => {},
   expense: null,
+  deleteExpense: () => {},
+  updateExpense: () => {},
 });
 
 export const ExpenseProvider = (props) => {
@@ -86,7 +88,7 @@ export const ExpenseProvider = (props) => {
     setToken(null);
     localStorage.removeItem("token");
     setUserEmail(null);
-    navigate("/auth");
+    navigate("/auth/login");
   };
   const signUpHandler = async (data) => {
     try {
@@ -100,7 +102,7 @@ export const ExpenseProvider = (props) => {
       );
       if (res.ok) {
         console.log("User has successfully signed up.");
-        navigate("/login");
+        navigate("/auth/login");
       } else {
         console.log("Failed to sign up.");
       }
@@ -121,10 +123,9 @@ export const ExpenseProvider = (props) => {
       if (res.ok) {
         const responseData = await res.json();
         console.log("User has successfully logged in.");
-   
+
         setUserEmail(responseData.email.replace(/[@.]/g, ""));
-        console.log("User ID:", );
-        
+        console.log("User ID:");
 
         setToken(responseData.idToken); // Update the token value
         localStorage.setItem("token", responseData.idToken);
@@ -167,12 +168,15 @@ export const ExpenseProvider = (props) => {
   const addExpenseHandler = async (expense) => {
     try {
       const res = await fetch(
-        `https://expense-tracker-app-146b8-default-rtdb.firebaseio.com/expense/${userEmail}.json`,
+        `https://expense-tracker-app-146b8-default-rtdb.firebaseio.com/expense${userEmail}.json`,
         {
           method: "POST",
-          body: JSON.stringify({ amount: expense.expAmount,
-          description: expense.expDescription,
-        cattegory: expense.expCategory }),
+          body: JSON.stringify({
+            id: expense.expenseId,
+            amount: expense.expAmount,
+            description: expense.expDescription,
+            category: expense.expCategory,
+          }),
           headers: {
             "Content-Type": "application/json",
             Authorization: token,
@@ -194,16 +198,11 @@ export const ExpenseProvider = (props) => {
   const fetchExpenseDataHandler = async () => {
     try {
       const response = await fetch(
-        `https://expense-tracker-app-146b8-default-rtdb.firebaseio.com/expense/${userEmail}.json`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
+        `https://expense-tracker-app-146b8-default-rtdb.firebaseio.com/expense${userEmail}.json`
       );
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         if (data) {
           const expenseItems = Object.values(data);
           setExpense(expenseItems);
@@ -213,12 +212,60 @@ export const ExpenseProvider = (props) => {
           console.log("expenseItems");
         }
         // Process the expenseData retrieved from the database
-    
       } else {
         console.log("Failed to fetch expense data.");
       }
     } catch (error) {
       console.log("Failed to connect to the database.");
+    }
+  };
+  const deleteExpenseHandler = async (id) => {
+    try {
+      const response = await fetch(
+        `https://expense-tracker-app-146b8-default-rtdb.firebaseio.com/expense${userEmail}.json`
+      );
+
+      if (response.ok) {
+        const existingItems = await response.json();
+
+        // Find the item key based on the provided id
+        const itemKey = Object.keys(existingItems).find(
+          (key) => existingItems[key].id === id
+        );
+
+        if (itemKey) {
+          const deleteResponse = await fetch(
+            `https://expense-tracker-app-146b8-default-rtdb.firebaseio.com/expense${userEmail}/${itemKey}.json`,
+            {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (deleteResponse.ok) {
+            setExpense((prevExpense) =>
+              prevExpense.filter((expense) => expense.id !== id)
+            );
+            fetchExpenseDataHandler();
+            console.log(`Expense with id ${id} deleted successfully`);
+            // Perform any additional actions as needed
+          } else {
+            console.log(`Failed to delete expense with id ${id}`);
+            // Perform any additional actions as needed
+          }
+        } else {
+          console.log(`Expense with id ${id} not found`);
+          // Perform any additional actions as needed
+        }
+      } else {
+        console.log("Failed to fetch existing expenses");
+        // Perform any additional actions as needed
+      }
+    } catch (error) {
+      console.log("Failed to connect to the database.");
+      // Perform any additional actions as needed
     }
   };
 
@@ -237,6 +284,7 @@ export const ExpenseProvider = (props) => {
         addExpense: addExpenseHandler,
         fetchExpenses: fetchExpenseDataHandler,
         expense: expense,
+        deleteExpense: deleteExpenseHandler,
       }}
     >
       {props.children}

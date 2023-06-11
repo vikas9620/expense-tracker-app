@@ -9,34 +9,44 @@ import {
   FormControl,
   InputLabel,
   Paper,
+  Chip,
+  Box,
 } from "@mui/material";
 import { ExpenseContext } from "../../cart-context/CartContex";
-
+import DeleteIcon from "@mui/icons-material/Delete";
 function ExpenseForm() {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
- 
-const {addExpense,expense, fetchExpenses } = useContext(ExpenseContext)
+
+  const { addExpense, expense, fetchExpenses, deleteExpense } =
+    useContext(ExpenseContext);
   const handleAddExpense = (event) => {
     event.preventDefault();
 
-    // Create a new expense object
     const newExpense = {
-     expAmount: amount,
+      expenseId: Date.now(),
+      expAmount: amount,
       expDescription: description,
       expCategory: category,
     };
-addExpense(newExpense);
-    // Add the new expense to the expenses list
-    
-
-    // Clear the form inputs
+    addExpense(newExpense);
     setAmount("");
     setDescription("");
     setCategory("");
   };
-useEffect(() => {fetchExpenses()},[]);
+
+  const editHandler = (selectedExpense) => {
+    setAmount(selectedExpense.amount);
+    setDescription(selectedExpense.description);
+    setCategory(selectedExpense.category);
+    deleteExpense(selectedExpense.id);
+  };
+
+  console.log(expense);
+  useEffect(() => {
+    fetchExpenses();
+  }, []);
   return (
     <Container maxWidth="sm">
       <div style={{ marginTop: "2rem" }}>
@@ -70,7 +80,6 @@ useEffect(() => {fetchExpenses()},[]);
                 <MenuItem value="Food">Food</MenuItem>
                 <MenuItem value="Petrol">Petrol</MenuItem>
                 <MenuItem value="Salary">Salary</MenuItem>
-                {/* Add more options as needed */}
               </Select>
             </FormControl>
             <Button
@@ -83,19 +92,88 @@ useEffect(() => {fetchExpenses()},[]);
             </Button>
           </form>
         </Paper>
+
         <div style={{ marginTop: "2rem" }}>
           <Typography variant="h5" component="h2" gutterBottom>
             Expense List
           </Typography>
+          <Paper style={{ marginBottom: "1rem", padding: "1rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Chip label="Amount" color="primary" />
+
+              <Chip label="Description" color="primary" />
+              <Chip label="Expense category" color="primary" />
+              <Chip label="Edit expense" color="success" />
+              <Chip label="Delete expense" color="error" />
+            </div>
+          </Paper>
           {expense ? (
-            <ul>
-              {expense.map((expense, index) => (
-                <li key={index}>
-                  Amount: {expense.amount}, Description: {expense.description},
-                  Category: {expense.category}
-                </li>
-              ))}
-            </ul>
+            expense.map((expense, index) => (
+              <Paper
+                key={index}
+                style={{
+                  marginBottom: "1rem",
+                  padding: "1rem",
+                  display: "flex",
+                  justifyContent: "space-around",
+                }}
+              >
+                <Chip
+                  label={expense.amount}
+                  color="primary"
+                  variant="outlined"
+                />
+                <Box width={100}>
+                  <Chip
+                    sx={{
+                      height: "auto",
+                      "& .MuiChip-label": {
+                        display: "block",
+                        whiteSpace: "normal",
+                      },
+                    }}
+                    label={expense.description}
+                    variant="outlined"
+                    color="primary"
+                  />
+                </Box>
+                <Chip
+                  label={expense.category}
+                  color="primary"
+                  variant="outlined"
+                />
+
+                <Button
+                  variant="outlined"
+                  style={{
+                    padding: "4px",
+                    minWidth: "unset",
+                    minHeight: "unset",
+                    fontSize: "0.75rem",
+                  }}
+                  color="success"
+                  onClick={() => editHandler(expense)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="outlined"
+                  style={{
+                    padding: "2px",
+                    minWidth: "unset",
+                    minHeight: "unset",
+                    fontSize: "0.75rem",
+                  }}
+                  color="error"
+                  startIcon={<DeleteIcon />}
+                  onClick={() => {
+                    deleteExpense(expense.id);
+                  }}
+                >
+                  Delete
+                </Button>
+              </Paper>
+            ))
           ) : (
             <Typography variant="body1">No expenses added yet.</Typography>
           )}
