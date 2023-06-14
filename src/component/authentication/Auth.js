@@ -1,20 +1,23 @@
-import React, {useContext, useState} from "react"
+import React, {useState} from "react"
 import Login from "./Login"
 import SignUp from "./SignUp"
-import { ExpenseContext } from "../../cart-context/CartContex";
+
 import { Navigate } from "react-router";
+import { useSelector } from "react-redux";
 
 
 
 const Auth = ()=>{
+  
+  const auth = useSelector(state => state.auth.isLoggedIn)
     const [isLogin, setIsLogin] = useState(true);
-const {isLoggedIn}= useContext(ExpenseContext)
+
     const switchAuthModeHandler = () => {
       setIsLogin((prevState) => !prevState);
     };
   
     return  <React.Fragment>
-    {isLoggedIn ? (
+    {auth ? (
       <Navigate replace to="/" />
     ) : (
       <React.Fragment>

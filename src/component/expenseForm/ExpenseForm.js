@@ -14,13 +14,15 @@ import {
 } from "@mui/material";
 import { ExpenseContext } from "../../cart-context/CartContex";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useSelector } from "react-redux";
 function ExpenseForm() {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [rendered, setRendered] = useState(false);
-  const { addExpense, expense, deleteExpense, fetchExpenses } =
+  const { addExpense, deleteExpense, fetchExpenses } =
     useContext(ExpenseContext);
+    const expense = useSelector(state => state.expense.expense);
   const handleAddExpense = (event) => {
     event.preventDefault();
 

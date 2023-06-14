@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { authAction } from "../store/Auth";
+import { expenseAction } from "../store/Expense";
 export const ExpenseContext = React.createContext({
-  token: null,
+ 
   signUp: () => {},
   login: () => {},
   isLoggedIn: "isLoggedIn",
@@ -12,20 +15,25 @@ export const ExpenseContext = React.createContext({
   emailVerified: () => {},
   addExpense: () => {},
   fetchExpenses: () => {},
-  expense: null,
+  
   deleteExpense: () => {},
   updateExpense: () => {},
 });
 
 export const ExpenseProvider = (props) => {
+  const dispatch = useDispatch()
+  const auth = useSelector(state => state.auth.isLoggedIn)
+  const token = useSelector(state=> state.auth.token)
+  const userEmail = useSelector(state=> state.auth.userId)
+  const expense = useSelector(state=> state.expense.expense)
   const navigate = useNavigate();
-  const initialToken = localStorage.getItem("token");
-  const [token, setToken] = useState(initialToken);
+
   const userIsLoggedIn = !!token;
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [error, setError] = useState(null);
-  const [expense, setExpense] = useState(null);
-  const [userEmail, setUserEmail] = useState(null);
+  
+
+ 
   const handleSendVerificationEmail = async () => {
     try {
       const idToken = localStorage.getItem("token");
@@ -57,6 +65,8 @@ export const ExpenseProvider = (props) => {
       setError(error.message);
     }
   };
+
+
   const checkEmailVerification = async (idToken) => {
     try {
       const response = await fetch(
@@ -84,10 +94,13 @@ export const ExpenseProvider = (props) => {
       return false;
     }
   };
+
+
   const logoutHandler = () => {
-    setToken(null);
+    dispatch(authAction.setToken({token: null}));
     localStorage.removeItem("token");
-    setUserEmail(null);
+    dispatch(authAction.setUserId({userId: null}));
+   dispatch(authAction.logout())
     navigate("/auth");
   };
   const signUpHandler = async (data) => {
@@ -102,7 +115,7 @@ export const ExpenseProvider = (props) => {
       );
       if (res.ok) {
         console.log("User has successfully signed up.");
-        navigate("/auth/login");
+        navigate("/login");
       } else {
         console.log("Failed to sign up.");
       }
@@ -124,13 +137,15 @@ export const ExpenseProvider = (props) => {
         const responseData = await res.json();
         console.log("User has successfully logged in.");
 
-        setUserEmail(responseData.email.replace(/[@.]/g, ""));
-        console.log("User ID:");
-
-        setToken(responseData.idToken); // Update the token value
-        localStorage.setItem("token", responseData.idToken);
+      
+dispatch(authAction.setUserId({userId: responseData.email.replace(/[@.]/g, "")}))
+     
+        dispatch(authAction.setToken({token: responseData.idToken}));
+       
         navigate("/");
-        fetchExpenseDataHandler()
+        dispatch(authAction.login());
+        fetchExpenseDataHandler();
+       
       } else {
         console.log("Failed to log in.");
       }
@@ -138,6 +153,12 @@ export const ExpenseProvider = (props) => {
       console.error(error);
     }
   };
+  useEffect(() => {
+    console.log('Auth:', auth);
+    console.log('Token ID:', token);
+    console.log('User Email ID:', userEmail);
+  }, [auth, token, userEmail]);
+
   const profileUpdateHandler = async (data, token) => {
     try {
       const res = await fetch(
@@ -206,10 +227,10 @@ export const ExpenseProvider = (props) => {
         console.log(data);
         if (data) {
           const expenseItems = Object.values(data);
-          setExpense(expenseItems);
+         dispatch(expenseAction.setExpense({expense: expenseItems}));
           console.log(expenseItems);
         } else {
-          setExpense([]);
+          dispatch(expenseAction.setExpense({expense: []}));
           console.log("expenseItems");
         }
         // Process the expenseData retrieved from the database
@@ -246,9 +267,9 @@ export const ExpenseProvider = (props) => {
           );
 
           if (deleteResponse.ok) {
-            setExpense((prevExpense) =>
-              prevExpense.filter((expense) => expense.id !== id)
-            );
+
+            dispatch(expenseAction.setExpense((prevState) => prevState.filter((expense) => expense.id !== id)));
+
             fetchExpenseDataHandler();
             console.log(`Expense with id ${id} deleted successfully`);
             // Perform any additional actions as needed

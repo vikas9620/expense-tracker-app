@@ -38,7 +38,7 @@ const MainPage = () => {
               <h3> welcome to expense tracker!!!</h3>
             </Typography>
             <div>
-              {isEmailSent && (
+              {isLoggedIn && (
                 <IconButton
                   size="large"
                   aria-label="account of current user"

@@ -4,11 +4,15 @@ import "./index.css";
 import App from "./App";
 import { ExpenseProvider } from "./cart-context/CartContex";
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./store/Index";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
-    <ExpenseProvider>
-      <App />
-    </ExpenseProvider>
-  </BrowserRouter>
+  <Provider store={store}>
+    <BrowserRouter>
+      <ExpenseProvider>
+        <App />
+      </ExpenseProvider>
+    </BrowserRouter>
+  </Provider>
 );
