@@ -9,11 +9,18 @@ import ForgotPassword from "./component/authentication/PasswordReset";
 
 import Login from "./component/authentication/Login";
 import { useSelector } from "react-redux";
+import { ThemeProvider } from "styled-components";
+import { GlobalStyle, darkTheme, lightTheme } from "./component/themeChanger/ThemeChanger";
 
 function App() {
   const auth = useSelector(state => state.auth.isLoggedIn)
+  const theme = useSelector((state) => state.theme.darkMode);
+
   return (
-    <React.Fragment>
+    
+  
+    <ThemeProvider theme={theme ? darkTheme : lightTheme}>
+    <GlobalStyle />
       <Outlet />
       <Routes>
        {auth && <Route path="/" element={<MainPage />} exact />}
@@ -22,8 +29,8 @@ function App() {
         <Route path="/login" element={<Login/>} />
         <Route path="/passwordreset" element={<ForgotPassword />} />
         <Route path="*" element={<Navigate replace to="/auth" />} />
-      </Routes>
-    </React.Fragment>
+      </Routes></ThemeProvider>
+    
   );
 }
 
