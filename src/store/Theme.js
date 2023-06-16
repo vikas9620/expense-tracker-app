@@ -7,11 +7,9 @@ const themeSlice = createSlice({
   initialState: initialvalue,
   reducers: {
     activatePremium(state) {
-      state.premium = true;
+      state.premium = !state.premium;
     },
-    deactivatePremium(state) {
-      state.premium = false;
-    },
+    
     toggleTheme(state) {
       state.darkMode = !state.darkMode;
     },

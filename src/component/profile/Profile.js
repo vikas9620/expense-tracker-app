@@ -8,12 +8,16 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
 import { AccountCircle, Image } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { authAction } from "../../store/Auth";
+import { useNavigate } from "react-router";
 
 const Profile = () => {
   const { logout, profileUpdate, token } = useContext(ExpenseContext);
   const [username, setUsername] = useState("");
   const [profileImageURL, setProfileImageURL] = useState("");
-
+  const dispatch = useDispatch()
+const navigate = useNavigate()
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -49,7 +53,7 @@ const Profile = () => {
   const handleProfileImageURLChange = (e) => {
     setProfileImageURL(e.target.value);
   };
-
+  
   const handleUpdate = (e) => {
     e.preventDefault();
 
@@ -62,8 +66,11 @@ const Profile = () => {
     console.log("Username:", username);
     console.log("Profile Image URL:", profileImageURL);
     console.log(token);
+dispatch(authAction.setProfileActive())
+
     setUsername("");
     setProfileImageURL("");
+navigate('/')
   };
   useEffect(() => {
     console.log("Token:", token);

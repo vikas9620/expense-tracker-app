@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialvalue = { isLoggedIn: false, token: null, userId: null };
+const initialvalue = { isLoggedIn: false, token: null, userId: null, profileActive: true };
 
 const authSlice = createSlice({
   name: "auth",
@@ -18,6 +18,9 @@ const authSlice = createSlice({
     setUserId(state, action) {
       state.userId = action.payload.userId;
     },
+    setProfileActive(state){
+      state.profileActive = false;
+    }
   },
 });
 

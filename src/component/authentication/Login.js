@@ -10,18 +10,20 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Button, Paper } from "@mui/material";
 import { ExpenseContext } from "../../cart-context/CartContex";
 import { Link } from "react-router-dom";
+
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#2196f3", // Blue color
+      main: "#2196f3",
     },
     background: {
-      default: "#fff", // White color
+      default: "#fff",
     },
   },
 });
 
 const Login = (props) => {
+
   const emailRef = useRef();
   const passwordRef = useRef();
 

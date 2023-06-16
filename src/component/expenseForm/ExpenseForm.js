@@ -68,9 +68,10 @@ console.log("darkMode toggle");
   let Premium = "";
   if (expense) {
     const totalExpense = expense.reduce(
-      (acc, expense) => acc + expense.amount,
+      (acc, expense) => acc + +expense.amount,
       0
     );
+    console.log(totalExpense)
     if (totalExpense > 10000) {
       Premium = (<Fragment>
         <Button
@@ -90,6 +91,7 @@ console.log("darkMode toggle");
       );
     }
     else{
+      
       Premium = null;
     }
   }

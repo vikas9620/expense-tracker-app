@@ -12,10 +12,11 @@ import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import VerifyEmailButton from "../authentication/EmailVerification";
 import ExpenseForm from "../expenseForm/ExpenseForm";
+import { useSelector } from "react-redux";
 
 const MainPage = () => {
   const { logout, isEmailSent, isLoggedIn } = useContext(ExpenseContext);
-
+const profileUpdated = useSelector(state=> state.auth.profileActive)
   return (
     <React.Fragment>
       <Box sx={{ flexGrow: 0.5 }}>
@@ -38,34 +39,30 @@ const MainPage = () => {
               <h3> welcome to expense tracker!!!</h3>
             </Typography>
             <div>
-              {isLoggedIn && (
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                >
+              { profileUpdated && (
+                <Button aria-haspopup="true" color="inherit" size="large">
                   <AccountCircle />
-                  <h5>your profile is incomplete</h5>
-                  <Link to="/profile">Complete Now</Link>
-                </IconButton>
+                  <h4>your profile is incomplete</h4>
+                  <Link to="/profile" style={{ textDecoration: 'none', color: 'grey', fontWeight: 'bold', margin: '1rem' }}>Complete Now</Link>
+                </Button>
               )}
-              {isLoggedIn &&   <Button
-                color="error"
-                variant="contained"
-                onClick={() => {
-                  logout();
-                }}
-              >
-                Logout
-              </Button>}
+              {isLoggedIn && (
+                <Button
+                  color="error"
+                  variant="contained"
+                  onClick={() => {
+                    logout();
+                  }}
+                >
+                  Logout
+                </Button>
+              )}
             </div>
           </Toolbar>
         </AppBar>
       </Box>
       {isEmailSent && <VerifyEmailButton />}
-      {isLoggedIn &&  <ExpenseForm />}
+      {isLoggedIn && <ExpenseForm />}
     </React.Fragment>
   );
 };
